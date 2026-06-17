@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
- <!-- Favicon -->
-<link rel="icon" type="image/x-icon" href="favicon.ico">
+ <link rel="icon" type="image/x-icon" href="favicon.ico">
 
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -34,6 +33,10 @@ background:var(--bg);
 color:var(--text);
 overflow-x:hidden;
 min-height:100vh;
+-webkit-user-select: none; /* Blokada zaznaczania tekstu */
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
 }
 .scroll-progress{
 position:fixed;top:0;left:0;height:3px;width:0;
@@ -176,9 +179,16 @@ color:var(--muted);
 @keyframes floatLogo{50%{transform:translateY(-15px)}}
 @keyframes titleGlow{to{background-position:200% center}}
 @keyframes pulse{50%{box-shadow:0 0 25px var(--neon)}}
+
+/* Style dla urządzeń mobilnych i tabletów */
 @media(max-width:768px){
 .hero p{letter-spacing:2px}
-.grid,.shield-grid{grid-template-columns:1fr}
+.grid, .shield-grid{
+grid-template-columns: 1fr !important;
+}
+.card, .info-tile{
+padding: 22px;
+}
 }
 </style>
 </head>
@@ -241,10 +251,11 @@ color:var(--muted);
 </section>
 
 <footer>
-<p>&copy; 2026 Patryk (Cert&OSINT). Projekt zrealizowany w standardzie Sec-Web. Wszystkie prawa zastrzeżone.</p>
+<p>&copy; 2026 Patryk (Cert&OSINT). Wszystkie prawa zastrzeżone.</p>
 </footer>
 
 <script>
+// Paski postępu i animacje ujawniania (Scroll)
 window.addEventListener('scroll',()=>{
 const win=document.documentElement.scrollTop;
 const h=document.documentElement.scrollHeight-document.documentElement.clientHeight;
@@ -261,6 +272,36 @@ el.classList.add('active');
 }
 window.addEventListener('scroll',show);
 show();
+
+// --- BLOKADA INSPEKCJI KODU (Systemy Windows, macOS, Linux, Mobile) ---
+
+// 1. Blokada prawego przycisku myszy (Menu kontekstowe)
+document.addEventListener('contextmenu', event => event.preventDefault());
+
+// 2. Blokada skrótów klawiszowych (F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Cmd+Opt+I)
+document.addEventListener('keydown', event => {
+    if (
+        event.key === 'F12' ||
+        (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'i')) ||
+        (event.ctrlKey && event.shiftKey && (event.key === 'J' || event.key === 'j')) ||
+        (event.ctrlKey && (event.key === 'U' || event.key === 'u')) ||
+        (event.metaKey && event.altKey && (event.key === 'I' || event.key === 'i')) // Dla macOS
+    ) {
+        event.preventDefault();
+        return false;
+    }
+});
+
+// 3. Pętla anty-debugowania (Zawiesza DevTools po otwarciu, działa też na symulatorach mobilnych)
+setInterval(function() {
+    const startTime = +new Date();
+    debugger;
+    const endTime = +new Date();
+    if (endTime - startTime > 100) {
+        // Jeśli wykryto otwarcie konsoli, można tu dodać akcję np. czyszczenie strony:
+        document.body.innerHTML = "Wykryto próbę inspekcji kodu. Dostęp zablokowany.";
+    }
+}, 100);
 </script>
 </body>
 </html>
