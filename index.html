@@ -1,452 +1,253 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patryk | Cert & OSINT - Cyberbezpieczeństwo</title>
-    <style>
-        /* Zaawansowany Reset i Zmienne CSS */
-        :root {
-            --bg-dark: #06090e;
-            --panel-bg: rgba(13, 17, 23, 0.7);
-            --primary-neon: #00f2ff;
-            --primary-glow: rgba(0, 242, 255, 0.25);
-            --text-main: #e2e8f0;
-            --text-muted: #94a3b8;
-            --border-color: rgba(0, 242, 255, 0.15);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            user-select: none;
-            -webkit-user-select: none;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            line-height: 1.6;
-            overflow-x: hidden;
-            position: relative;
-            min-height: 100vh;
-        }
-
-        /* --- STYLOWE ANIMOWANE TŁO CYBER-GRID --- */
-        .cyber-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: 
-                linear-gradient(rgba(0, 242, 255, 0.03) 1px, transparent 1px) 0 0 / 50px 50px,
-                linear-gradient(90deg, rgba(0, 242, 255, 0.03) 1px, transparent 1px) 0 0 / 50px 50px,
-                radial-gradient(circle at 50% 50%, #0d1527 0%, #06090e 100%);
-            animation: gridMove 20s linear infinite;
-        }
-
-        .cyber-bg::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at 30% 40%, rgba(0, 242, 255, 0.05) 0%, transparent 40%),
-                        radial-gradient(circle at 70% 60%, rgba(0, 102, 255, 0.08) 0%, transparent 45%);
-            animation: ambientGlow 15s ease-in-out infinite alternate;
-        }
-
-        @keyframes gridMove {
-            0% { background-position: 0 0; }
-            100% { background-position: 50px 50px; }
-        }
-
-        @keyframes ambientGlow {
-            0% { transform: rotate(0deg) scale(1); }
-            100% { transform: rotate(360deg) scale(1.1); }
-        }
-
-        /* --- NAWIGACJA (GLASSMORPHISM) --- */
-        header {
-            background: rgba(6, 9, 14, 0.75);
-            border-bottom: 1px solid var(--border-color);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 20px;
-        }
-
-        .logo {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: var(--primary-neon);
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            text-shadow: 0 0 10px var(--primary-glow);
-        }
-
-        .logo span {
-            color: #ffffff;
-            font-weight: 400;
-        }
-
-        /* --- SEKCJA HERO --- */
-        .hero {
-            margin-top: 79px;
-            min-height: 55vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 50px 20px;
-            position: relative;
-        }
-
-        .hero-img {
-            max-width: 100%;
-            width: 440px;
-            height: auto;
-            border-radius: 16px;
-            border: 1px solid rgba(0, 242, 255, 0.2);
-            box-shadow: 0 0 35px rgba(0, 242, 255, 0.15);
-            margin-bottom: 30px;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: block;
-        }
-
-        .hero-img:hover {
-            transform: scale(1.03) translateY(-5px);
-            border-color: var(--primary-neon);
-            box-shadow: 0 0 50px rgba(0, 242, 255, 0.35);
-        }
-
-        .hero h1 {
-            font-size: 3.2rem;
-            color: #ffffff;
-            margin-bottom: 8px;
-            font-weight: 900;
-            letter-spacing: -1px;
-            background: linear-gradient(135deg, #ffffff 30%, #a5f3fc 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-            font-size: 1.05rem;
-            color: var(--primary-neon);
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            text-shadow: 0 0 8px var(--primary-glow);
-        }
-
-        /* --- SEKCJA KAFELKÓW (GŁÓWNE INFORMACJE O MNIE) --- */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px 20px 40px 20px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
-        }
-
-        .card {
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 35px;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--primary-neon), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.5s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            border-color: rgba(0, 242, 255, 0.4);
-            box-shadow: 0 15px 35px rgba(0, 242, 255, 0.1);
-            background: rgba(13, 17, 23, 0.85);
-        }
-
-        .card:hover::before {
-            transform: translateX(100%);
-        }
-
-        .card h3 {
-            color: #ffffff;
-            margin-bottom: 15px;
-            font-size: 1.35rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            letter-spacing: 0.5px;
-        }
-
-        .card h3::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background-color: var(--primary-neon);
-            box-shadow: 0 0 8px var(--primary-neon);
-            border-radius: 2px;
-            display: inline-block;
-        }
-
-        .card p {
-            color: var(--text-muted);
-            font-size: 0.98rem;
-            text-align: justify;
-        }
-
-        /* --- SEKCJA CYBER-TARCZA (ZMIENIONA Z PRZYCISKÓW NA KAFELKI) --- */
-        .shield-section {
-            background: rgba(13, 17, 23, 0.6);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 70px 20px;
-            border-top: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .shield-section h2 {
-            color: #ffffff;
-            text-align: center;
-            margin-bottom: 12px;
-            font-size: 2.2rem;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-        }
-
-        .shield-subtitle {
-            color: var(--text-muted);
-            text-align: center;
-            max-width: 700px;
-            margin: 0 auto 40px auto;
-            font-size: 1rem;
-        }
-
-        .shield-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
-        }
-
-        .info-tile {
-            background: rgba(22, 27, 34, 0.45);
-            border: 1px solid rgba(0, 242, 255, 0.1);
-            border-radius: 12px;
-            padding: 30px;
-            transition: all 0.3s ease;
-        }
-
-        .info-tile:hover {
-            border-color: var(--primary-neon);
-            background: rgba(22, 27, 34, 0.7);
-            box-shadow: inset 0 0 15px rgba(0, 242, 255, 0.05);
-        }
-
-        .info-tile-title {
-            color: var(--primary-neon);
-            font-size: 1.1rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 12px;
-            text-shadow: 0 0 5px var(--primary-glow);
-        }
-
-        .info-tile-desc {
-            color: var(--text-main);
-            font-size: 0.95rem;
-            text-align: left;
-        }
-
-        /* --- STOPKA --- */
-        footer {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            letter-spacing: 0.5px;
-        }
-
-        /* --- RESPONSYWNOŚĆ MOBILNA --- */
-        @media (max-width: 768px) {
-            .cyber-bg {
-                background: 
-                    linear-gradient(rgba(0, 242, 255, 0.03) 1px, transparent 1px) 0 0 / 35px 35px,
-                    linear-gradient(90deg, rgba(0, 242, 255, 0.03) 1px, transparent 1px) 0 0 / 35px 35px,
-                    radial-gradient(circle at 50% 50%, #0d1527 0%, #06090e 100%);
-            }
-            .hero {
-                padding: 40px 15px 20px 15px;
-            }
-            .hero h1 {
-                font-size: 2.4rem;
-            }
-            .hero p {
-                font-size: 0.9rem;
-                letter-spacing: 2px;
-            }
-            .hero-img {
-                width: 100%;
-                max-width: 330px;
-            }
-            .grid, .shield-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            .nav-container {
-                justify-content: center;
-            }
-            .shield-section h2 {
-                font-size: 1.8rem;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Patryk | Cert & OSINT - Cyberbezpieczeństwo">
+<title>Patryk | Cert & OSINT</title>
+<style>
+:root{
+--bg:#06090e;
+--panel:rgba(13,17,23,.72);
+--neon:#00f2ff;
+--text:#e2e8f0;
+--muted:#94a3b8;
+--border:rgba(0,242,255,.15);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+font-family:Segoe UI,system-ui,sans-serif;
+background:var(--bg);
+color:var(--text);
+overflow-x:hidden;
+min-height:100vh;
+}
+.scroll-progress{
+position:fixed;top:0;left:0;height:3px;width:0;
+background:var(--neon);
+box-shadow:0 0 20px var(--neon);
+z-index:9999;
+}
+.cyber-bg{
+position:fixed;inset:0;z-index:-3;
+background:
+linear-gradient(rgba(0,242,255,.03) 1px,transparent 1px) 0 0/40px 40px,
+linear-gradient(90deg,rgba(0,242,255,.03) 1px,transparent 1px) 0 0/40px 40px,
+radial-gradient(circle at center,#0d1527,#06090e);
+animation:gridMove 15s linear infinite;
+}
+.cyber-bg::before{
+content:"";
+position:absolute;
+width:250%;height:250%;
+top:-75%;left:-75%;
+filter:blur(90px);
+background:
+radial-gradient(circle,rgba(0,242,255,.15) 0%,transparent 35%),
+radial-gradient(circle,rgba(0,102,255,.12) 0%,transparent 40%),
+radial-gradient(circle,rgba(160,0,255,.12) 0%,transparent 45%);
+animation:auroraMove 25s linear infinite, auroraRotate 60s linear infinite;
+}
+.particles,.particles:before,.particles:after{
+position:fixed;inset:0;content:"";pointer-events:none;
+}
+.particles:before,.particles:after{
+background-image:radial-gradient(rgba(0,242,255,.8) 1px, transparent 1px);
+background-size:70px 70px;
+opacity:.12;
+animation:particlesMove 40s linear infinite;
+}
+.particles:after{animation-duration:60s;}
+header{
+position:fixed;top:0;width:100%;z-index:1000;
+background:rgba(6,9,14,.75);
+backdrop-filter:blur(14px);
+border-bottom:1px solid var(--border);
+}
+.nav-container{
+max-width:1200px;margin:auto;padding:18px 20px;
+display:flex;justify-content:center;
+}
+.logo{color:var(--neon);font-weight:800;letter-spacing:2px}
+.hero{
+min-height:60vh;
+display:flex;flex-direction:column;
+justify-content:center;align-items:center;
+text-align:center;padding:120px 20px 50px;
+}
+.hero-img{
+width:min(450px,90%);
+border-radius:18px;
+border:1px solid rgba(0,242,255,.25);
+box-shadow:0 0 40px rgba(0,242,255,.18);
+animation:floatLogo 6s ease-in-out infinite;
+}
+.hero h1{
+font-size:clamp(3rem,8vw,5rem);
+margin-top:25px;
+background:linear-gradient(90deg,#fff,#9df7ff,#fff);
+background-size:200%;
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+animation:titleGlow 8s linear infinite;
+}
+.hero p{
+color:var(--neon);
+letter-spacing:4px;
+margin-top:10px;
+}
+.container{max-width:1200px;margin:auto;padding:20px;}
+.grid,.shield-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+gap:25px;
+}
+.card,.info-tile{
+background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+backdrop-filter:blur(14px);
+border:1px solid var(--border);
+border-radius:16px;
+padding:32px;
+position:relative;
+overflow:hidden;
+transition:.45s;
+}
+.card:hover,.info-tile:hover{
+transform:perspective(1000px) rotateX(5deg) rotateY(-5deg) translateY(-12px);
+box-shadow:0 20px 40px rgba(0,242,255,.12);
+border-color:rgba(0,242,255,.45);
+}
+.card:before,.info-tile:before{
+content:"";
+position:absolute;
+top:0;left:-100%;
+width:100%;height:2px;
+background:linear-gradient(90deg,transparent,var(--neon),transparent);
+transition:.8s;
+}
+.card:hover:before,.info-tile:hover:before{left:100%;}
+.card h3{margin-bottom:15px;}
+.card h3:before{
+content:"";
+display:inline-block;
+width:8px;height:8px;
+margin-right:10px;
+background:var(--neon);
+box-shadow:0 0 12px var(--neon);
+animation:pulse 2s infinite;
+}
+.card p,.info-tile-desc{color:var(--muted);line-height:1.7}
+.shield-section{padding:80px 20px;}
+.shield-section h2{text-align:center;font-size:2.3rem;margin-bottom:10px;}
+.shield-subtitle{text-align:center;color:var(--muted);margin-bottom:40px;}
+.info-tile-title{
+color:var(--neon);
+font-weight:700;
+margin-bottom:12px;
+}
+footer{
+padding:40px 20px;
+text-align:center;
+color:var(--muted);
+}
+.reveal{opacity:0;transform:translateY(50px);transition:1s}
+.reveal.active{opacity:1;transform:none}
+@keyframes gridMove{to{background-position:40px 40px}}
+@keyframes auroraMove{
+0%{transform:translate(-10%,-10%)}
+50%{transform:translate(10%,10%)}
+100%{transform:translate(-10%,-10%)}
+}
+@keyframes auroraRotate{from{rotate:0deg}to{rotate:360deg}}
+@keyframes particlesMove{from{transform:translateY(0) rotate(0)}to{transform:translateY(-250px) rotate(360deg)}}
+@keyframes floatLogo{50%{transform:translateY(-15px)}}
+@keyframes titleGlow{to{background-position:200% center}}
+@keyframes pulse{50%{box-shadow:0 0 25px var(--neon)}}
+@media(max-width:768px){
+.hero p{letter-spacing:2px}
+.grid,.shield-grid{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
+<div class="scroll-progress"></div>
+<div class="cyber-bg"></div>
+<div class="particles"></div>
 
-    <!-- Animowane Tło Cyfrowe -->
-    <div class="cyber-bg"></div>
+<header>
+<div class="nav-container">
+<div class="logo">Patryk (Cert&OSINT)</div>
+</div>
+</header>
 
-    <!-- Pasek Nawigacji -->
-    <header>
-        <div class="nav-container">
-            <div class="logo">Patryk <span>(Cert&OSINT)</span></div>
-        </div>
-    </header>
+<section class="hero">
+<img src="logo.png" alt="Biały Wywiad - Bezpieczeństwo i Informacje" class="hero-img">
+<h1>Patryk</h1>
+<p>Cybersecurity & OSINT Specialist</p>
+</section>
 
-    <!-- Sekcja Główna (Hero) -->
-    <section class="hero">
-        <img src="logo.png" alt="Biały Wywiad - Bezpieczeństwo i Informacje" class="hero-img">
-        <h1>Patryk</h1>
-        <p>Cybersecurity & OSINT Specialist</p>
-    </section>
+<main class="container">
+<div class="grid">
+<div class="card reveal">
+<h3>Cyberbezpieczeństwo</h3>
+<p>Moja uwaga skupia się na analizie cyfrowych zagrożeń oraz edukowaniu innych, jak bezpiecznie poruszać się po sieci. Propaguję najlepsze praktyki ochrony prywatności, zabezpieczania kont oraz danych w świecie nowych technologii.</p>
+</div>
 
-    <!-- Główne Kafelki Informacyjne -->
-    <main class="container">
-        <div class="grid">
-            <!-- Kafel 1 -->
-            <div class="card">
-                <h3>Cyberbezpieczeństwo</h3>
-                <p>Moja uwaga skupia się na analizie cyfrowych zagrożeń oraz edukowaniu innych, jak bezpiecznie poruszać się po sieci. Propaguję najlepsze praktyki ochrony prywatności, zabezpieczania kont oraz danych w świecie nowych technologii.</p>
-            </div>
-            
-            <!-- Kafel 2 -->
-            <div class="card">
-                <h3>Przeciw Cyberprzemocy</h3>
-                <p>Stanowczo sprzeciwiam się wszelkim przejawom hejtu, trollingu oraz nękania rówieśniczego i personalnego w sieci. Pomagam ofiarom nękania w procesie poprawnego zabezpieczania śladów i analizie naruszeń.</p>
-            </div>
+<div class="card reveal">
+<h3>Przeciw Cyberprzemocy</h3>
+<p>Stanowczo sprzeciwiam się wszelkim przejawom hejtu, trollingu oraz nękania rówieśniczego i personalnego w sieci. Pomagam ofiarom nękania w procesie poprawnego zabezpieczania śladów i analizie naruszeń.</p>
+</div>
 
-            <!-- Kafel 3 -->
-            <div class="card">
-                <h3>Aktywna Moderacja</h3>
-                <p>Działam jako doświadczony moderator na różnorodnych portalach oraz platformach społecznościowych. Moim priorytetem jest natychmiastowe neutralizowanie toksyczności, dezinformacji oraz dbanie o porządek i kulturę dyskusji.</p>
-            </div>
-        </div>
-    </main>
+<div class="card reveal">
+<h3>Aktywna Moderacja</h3>
+<p>Działam jako doświadczony moderator na różnorodnych portalach oraz platformach społecznościowych. Moim priorytetem jest natychmiastowe neutralizowanie toksyczności, dezinformacji oraz dbanie o porządek i kulturę dyskusji.</p>
+</div>
+</div>
+</main>
 
-    <!-- NOWA Sekcja: Cyber-Tarcza Ochronna (Zamiast dawnych przycisków akcji) -->
-    <section class="shield-section">
-        <h2>Cyber-Tarcza Ochronna</h2>
-        <p class="shield-subtitle">Zakres realizowanych zadań pomocowych oraz procedury operacyjne wsparcia w sieci.</p>
-        
-        <div class="shield-grid">
-            <!-- Nowy Stały Kafelek 1 -->
-            <div class="info-tile">
-                <div class="info-tile-title">Biały Wywiad (OSINT)</div>
-                <div class="info-tile-desc">Pozyskiwanie, weryfikacja i korelacja publicznie dostępnych informacji w sieci (Open Source Intelligence). Wykorzystywane do skutecznej identyfikacji cyberzagrożeń, fałszywych profili i sieciowych oszustw.</div>
-            </div>
+<section class="shield-section">
+<h2>Cyber-Tarcza Ochronna</h2>
+<p class="shield-subtitle">Zakres realizowanych zadań pomocowych oraz procedury operacyjne wsparcia w sieci.</p>
 
-            <!-- Nowy Stały Kafelek 2 -->
-            <div class="info-tile">
-                <div class="info-tile-title">Walka z Hejtem</div>
-                <div class="info-tile-desc">W przypadku doświadczania prześladowania kluczowa jest zimna krew. Nie należy wchodzić w toksyczną dyskusję. Należy niezwłocznie zabezpieczyć pełne linki URL, unikalne ID użytkowników oraz zrzuty ekranu przed próbą ich usunięcia.</div>
-            </div>
+<div class="shield-grid">
+<div class="info-tile reveal">
+<div class="info-tile-title">Biały Wywiad (OSINT)</div>
+<div class="info-tile-desc">Pozyskiwanie, weryfikacja i korelacja publicznie dostępnych informacji w sieci (Open Source Intelligence). Wykorzystywane do skutecznej identyfikacji cyberzagrożeń, fałszywych profili i sieciowych oszustw.</div>
+</div>
 
-            <!-- Nowy Stały Kafelek 3 -->
-            <div class="info-tile">
-                <div class="info-tile-title">Zgłoszenia / Moderacja</div>
-                <div class="info-tile-desc">Profesjonalne wsparcie dla społeczności cyfrowych: przeprowadzanie audytów bezpieczeństwa na serwerach, tworzenie szczelnych regulaminów porządkowych, wdrażanie zaawansowanych botów filtrujących oraz sprawne zarządzanie kryzysowe.</div>
-            </div>
-        </div>
-    </section>
+<div class="info-tile reveal">
+<div class="info-tile-title">Walka z Hejtem</div>
+<div class="info-tile-desc">W przypadku doświadczania prześladowania kluczowa jest zimna krew. Nie należy wchodzić w toksyczną dyskusję. Należy niezwłocznie zabezpieczyć pełne linki URL, unikalne ID użytkowników oraz zrzuty ekranu przed próbą ich usunięcia.</div>
+</div>
 
-    <!-- Stopka strony -->
-    <footer>
-        <p>&copy; 2026 Patryk (Cert&OSINT). Projekt zrealizowany w standardzie Sec-Web. Wszystkie prawa zastrzeżone.</p>
-    </footer>
+<div class="info-tile reveal">
+<div class="info-tile-title">Zgłoszenia / Moderacja</div>
+<div class="info-tile-desc">Profesjonalne wsparcie dla społeczności cyfrowych: przeprowadzanie audytów bezpieczeństwa na serwerach, tworzenie szczelnych regulaminów porządkowych, wdrażanie zaawansowanych botów filtrujących oraz sprawne zarządzanie kryzysowe.</div>
+</div>
+</div>
+</section>
 
-    <!-- Skrypty Zabezpieczające (Blokada Inspekcji Kodu) -->
-    <script>
-        // Blokowanie prawego przycisku myszy
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-        });
+<footer>
+<p>&copy; 2026 Patryk (Cert&OSINT). Projekt zrealizowany w standardzie Sec-Web. Wszystkie prawa zastrzeżone.</p>
+</footer>
 
-        // Blokowanie skrótów deweloperskich (F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U)
-        document.addEventListener('keydown', function(e) {
-            if (e.keyCode === 123) { // F12
-                e.preventDefault();
-                return false;
-            }
-            if (e.ctrlKey && e.shiftKey && e.keyCode === 73) { // Ctrl+Shift+I
-                e.preventDefault();
-                return false;
-            }
-            if (e.ctrlKey && e.shiftKey && e.keyCode === 74) { // Ctrl+Shift+J
-                e.preventDefault();
-                return false;
-            }
-            if (e.ctrlKey && e.keyCode === 85) { // Ctrl+U
-                e.preventDefault();
-                return false;
-            }
-        });
+<script>
+window.addEventListener('scroll',()=>{
+const win=document.documentElement.scrollTop;
+const h=document.documentElement.scrollHeight-document.documentElement.clientHeight;
+document.querySelector('.scroll-progress').style.width=(win/h)*100+'%';
+});
 
-        // Anti-Console-Log: Czyszczenie konsoli przy próbach manipulacji wielkością okna
-        setInterval(function() {
-            if ((window.outerHeight - window.innerHeight) > 120 || (window.outerWidth - window.innerWidth) > 120) {
-                console.clear();
-            }
-        }, 1000);
-    </script>
+const reveal=document.querySelectorAll('.reveal');
+function show(){
+reveal.forEach(el=>{
+if(el.getBoundingClientRect().top < window.innerHeight-120){
+el.classList.add('active');
+}
+});
+}
+window.addEventListener('scroll',show);
+show();
+</script>
 </body>
 </html>
