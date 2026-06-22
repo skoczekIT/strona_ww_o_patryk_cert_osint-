@@ -3,7 +3,7 @@
 <head>
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <meta name="description" content="Patryk | Cert & OSINT - Cyberbezpieczeństwo">
 <title>Patryk | Cert & OSINT</title>
 <style>
@@ -11,7 +11,8 @@
 --bg:#06090e;--panel:rgba(13,17,23,.72);--neon:#00f2ff;
 --text:#e2e8f0;--muted:#94a3b8;--border:rgba(0,242,255,.15);
 }
-*{margin:0;padding:0;box-sizing:border-box}
+/* user-select: none uniemożliwia zaznaczanie i kopiowanie tekstu na PC i smartfonach */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
 body{font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;min-height:100vh}
 .scroll-progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--neon);box-shadow:0 0 20px var(--neon);z-index:9999}
 .cyber-bg{position:fixed;inset:0;z-index:-3;background:
@@ -23,20 +24,30 @@ header{position:fixed;top:0;width:100%;z-index:1000;background:rgba(6,9,14,.75);
 .logo{color:var(--neon);font-weight:800;letter-spacing:2px}
 .hero{min-height:60vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:120px 20px 50px}
 .hero-img{width:min(450px,90%);border-radius:18px;border:1px solid rgba(0,242,255,.25);box-shadow:0 0 40px rgba(0,242,255,.18)}
-.hero h1{font-size:clamp(3rem,8vw,5rem);margin-top:25px}
-.hero p{color:var(--neon);letter-spacing:3px;margin-top:10px}
+.hero h1{font-size:clamp(2.5rem,8vw,5rem);margin-top:25px}
+.hero p{color:var(--neon);letter-spacing:3px;margin-top:10px;font-size:clamp(0.9rem,2.5vw,1.1rem)}
 .container{max-width:1200px;margin:auto;padding:20px}
 .grid,.shield-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:25px}
 .card,.info-tile{background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.02));backdrop-filter:blur(14px);border:1px solid var(--border);border-radius:16px;padding:32px;transition:.45s}
 .card:hover,.info-tile:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(0,242,255,.12)}
-.card p,.info-tile-desc{color:var(--muted);line-height:1.7}
+.card p,.info-tile-desc{color:var(--muted);line-height:1.7;word-break:break-word}
 .shield-section{padding:80px 20px;max-width:1200px;margin:auto}
 .shield-section h2{text-align:center;font-size:2.3rem;margin-bottom:10px}
 .shield-subtitle{text-align:center;color:var(--muted);margin-bottom:40px}
 .info-tile-title{color:var(--neon);font-weight:700;margin-bottom:12px}
-footer{padding:40px 20px;text-align:center;color:var(--muted)}
+footer{padding:40px 20px;text-align:center;color:var(--muted);font-size:0.9rem}
 .reveal{opacity:1}
-@media(max-width:768px){.grid,.shield-grid{grid-template-columns:1fr}}
+
+/* Dedykowane style responsywne dla smartfonów i tabletów */
+@media(max-width:768px){
+.grid,.shield-grid{grid-template-columns:1fr;gap:15px}
+.hero{padding:100px 15px 30px}
+.card,.info-tile{padding:20px;border-radius:12px}
+.shield-section{padding:40px 15px}
+.shield-section h2{font-size:1.8rem}
+.info-tile-desc{font-size:0.95rem;line-height:1.5}
+footer{padding:25px 15px}
+}
 </style>
 </head>
 <body>
@@ -135,11 +146,71 @@ footer{padding:40px 20px;text-align:center;color:var(--muted)}
 </footer>
 
 <script>
+// --- FUNKCJE INTERFEJSU ---
 window.addEventListener('scroll',()=>{
 const win=document.documentElement.scrollTop;
 const h=document.documentElement.scrollHeight-document.documentElement.clientHeight;
 document.querySelector('.scroll-progress').style.width=(win/h)*100+'%';
 });
+
+
+// --- SIKURITI / ANTY-DEVTOOLS SYSTEM ---
+
+// 1. Blokada myszy i gestów kontekstowych
+document.addEventListener('contextmenu', e => e.preventDefault());
+
+// 2. Blokowanie skrótów klawiszowych (Windows, Linux, macOS)
+document.addEventListener('keydown', e => {
+  if (
+    e.key === 'F12' ||
+    (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) ||
+    (e.ctrlKey && e.key.toUpperCase() === 'U') ||
+    (e.metaKey && e.altKey && e.key.toUpperCase() === 'I') // macOS Safari/Chrome
+  ) {
+    e.preventDefault();
+    return false;
+  }
+});
+
+// 3. Agresywna pętla debugująca (zamraża narzędzia deweloperskie i czyści widok)
+(function() {
+  const detectDevTools = function() {
+    const start = new Date();
+    debugger; // Kod zatrzyma się tutaj, jeśli DevTools jest włączone
+    const end = new Date();
+    if (end - start > 50) {
+      document.body.innerHTML = `
+        <div style="display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;background:#06090e;color:#00f2ff;font-family:sans-serif;text-align:center;padding:20px;">
+          <h1 style="font-size:2rem;margin-bottom:15px;">🛡️ Witryna zabezpieczona</h1>
+          <p style="color:#94a3b8;">Wykryto próbę inspekcji kodu źródłowego. Dostęp został zablokowany.</p>
+        </div>`;
+      throw new Error("DevTools block active.");
+    }
+  };
+  setInterval(detectDevTools, 200);
+  window.addEventListener('resize', detectDevTools);
+})();
+
+// 4. Paraliżowanie konsoli (czyszczenie i nadpisywanie metod)
+(function() {
+  setInterval(() => { console.clear(); }, 10);
+  const noop = () => {};
+  Object.keys(console).forEach(key => {
+    if (typeof console[key] === 'function') {
+      console[key] = noop;
+    }
+  });
+})();
+
+// 5. Wykrywanie bocznych i dolnych paneli inspekcji na podstawie wymiarów okna
+setInterval(() => {
+  const threshold = 160;
+  const widthDiff = window.outerWidth - window.innerWidth > threshold;
+  const heightDiff = window.outerHeight - window.innerHeight > threshold;
+  if (widthDiff || heightDiff) {
+    document.body.innerHTML = "<div style='color:#00f2ff; text-align:center; margin-top:20vh; font-family:sans-serif;'><h2>Ochrona witryny aktywna.</h2></div>";
+  }
+}, 500);
 </script>
 </body>
 </html>
