@@ -1,201 +1,47 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
- <link rel="icon" type="image/x-icon" href="favicon.ico">
-
-<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-
-<link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png">
-
-<meta name="theme-color" content="#06090e">
-<meta name="msapplication-TileColor" content="#06090e"> 
+<link rel="icon" type="image/x-icon" href="favicon.ico">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="description" content="Patryk | Cert & OSINT - Cyberbezpieczeństwo">
 <title>Patryk | Cert & OSINT</title>
 <style>
 :root{
---bg:#06090e;
---panel:rgba(13,17,23,.72);
---neon:#00f2ff;
---text:#e2e8f0;
---muted:#94a3b8;
---border:rgba(0,242,255,.15);
+--bg:#06090e;--panel:rgba(13,17,23,.72);--neon:#00f2ff;
+--text:#e2e8f0;--muted:#94a3b8;--border:rgba(0,242,255,.15);
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{
-font-family:Segoe UI,system-ui,sans-serif;
-background:var(--bg);
-color:var(--text);
-overflow-x:hidden;
-min-height:100vh;
--webkit-user-select: none; /* Blokada zaznaczania tekstu */
--moz-user-select: none;
--ms-user-select: none;
-user-select: none;
-}
-.scroll-progress{
-position:fixed;top:0;left:0;height:3px;width:0;
-background:var(--neon);
-box-shadow:0 0 20px var(--neon);
-z-index:9999;
-}
-.cyber-bg{
-position:fixed;inset:0;z-index:-3;
-background:
+body{font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;min-height:100vh}
+.scroll-progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--neon);box-shadow:0 0 20px var(--neon);z-index:9999}
+.cyber-bg{position:fixed;inset:0;z-index:-3;background:
 linear-gradient(rgba(0,242,255,.03) 1px,transparent 1px) 0 0/40px 40px,
 linear-gradient(90deg,rgba(0,242,255,.03) 1px,transparent 1px) 0 0/40px 40px,
-radial-gradient(circle at center,#0d1527,#06090e);
-animation:gridMove 15s linear infinite;
-}
-.cyber-bg::before{
-content:"";
-position:absolute;
-width:250%;height:250%;
-top:-75%;left:-75%;
-filter:blur(90px);
-background:
-radial-gradient(circle,rgba(0,242,255,.15) 0%,transparent 35%),
-radial-gradient(circle,rgba(0,102,255,.12) 0%,transparent 40%),
-radial-gradient(circle,rgba(160,0,255,.12) 0%,transparent 45%);
-animation:auroraMove 25s linear infinite, auroraRotate 60s linear infinite;
-}
-.particles,.particles:before,.particles:after{
-position:fixed;inset:0;content:"";pointer-events:none;
-}
-.particles:before,.particles:after{
-background-image:radial-gradient(rgba(0,242,255,.8) 1px, transparent 1px);
-background-size:70px 70px;
-opacity:.12;
-animation:particlesMove 40s linear infinite;
-}
-.particles:after{animation-duration:60s;}
-header{
-position:fixed;top:0;width:100%;z-index:1000;
-background:rgba(6,9,14,.75);
-backdrop-filter:blur(14px);
-border-bottom:1px solid var(--border);
-}
-.nav-container{
-max-width:1200px;margin:auto;padding:18px 20px;
-display:flex;justify-content:center;
-}
+radial-gradient(circle at center,#0d1527,#06090e)}
+header{position:fixed;top:0;width:100%;z-index:1000;background:rgba(6,9,14,.75);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.nav-container{max-width:1200px;margin:auto;padding:18px 20px;display:flex;justify-content:center}
 .logo{color:var(--neon);font-weight:800;letter-spacing:2px}
-.hero{
-min-height:60vh;
-display:flex;flex-direction:column;
-justify-content:center;align-items:center;
-text-align:center;padding:120px 20px 50px;
-}
-.hero-img{
-width:min(450px,90%);
-border-radius:18px;
-border:1px solid rgba(0,242,255,.25);
-box-shadow:0 0 40px rgba(0,242,255,.18);
-animation:floatLogo 6s ease-in-out infinite;
-}
-.hero h1{
-font-size:clamp(3rem,8vw,5rem);
-margin-top:25px;
-background:linear-gradient(90deg,#fff,#9df7ff,#fff);
-background-size:200%;
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-animation:titleGlow 8s linear infinite;
-}
-.hero p{
-color:var(--neon);
-letter-spacing:4px;
-margin-top:10px;
-}
-.container{max-width:1200px;margin:auto;padding:20px;}
-.grid,.shield-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-gap:25px;
-}
-.card,.info-tile{
-background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
-backdrop-filter:blur(14px);
-border:1px solid var(--border);
-border-radius:16px;
-padding:32px;
-position:relative;
-overflow:hidden;
-transition:.45s;
-}
-.card:hover,.info-tile:hover{
-transform:perspective(1000px) rotateX(5deg) rotateY(-5deg) translateY(-12px);
-box-shadow:0 20px 40px rgba(0,242,255,.12);
-border-color:rgba(0,242,255,.45);
-}
-.card:before,.info-tile:before{
-content:"";
-position:absolute;
-top:0;left:-100%;
-width:100%;height:2px;
-background:linear-gradient(90deg,transparent,var(--neon),transparent);
-transition:.8s;
-}
-.card:hover:before,.info-tile:hover:before{left:100%;}
-.card h3{margin-bottom:15px;}
-.card h3:before{
-content:"";
-display:inline-block;
-width:8px;height:8px;
-margin-right:10px;
-background:var(--neon);
-box-shadow:0 0 12px var(--neon);
-animation:pulse 2s infinite;
-}
+.hero{min-height:60vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:120px 20px 50px}
+.hero-img{width:min(450px,90%);border-radius:18px;border:1px solid rgba(0,242,255,.25);box-shadow:0 0 40px rgba(0,242,255,.18)}
+.hero h1{font-size:clamp(3rem,8vw,5rem);margin-top:25px}
+.hero p{color:var(--neon);letter-spacing:3px;margin-top:10px}
+.container{max-width:1200px;margin:auto;padding:20px}
+.grid,.shield-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:25px}
+.card,.info-tile{background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.02));backdrop-filter:blur(14px);border:1px solid var(--border);border-radius:16px;padding:32px;transition:.45s}
+.card:hover,.info-tile:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(0,242,255,.12)}
 .card p,.info-tile-desc{color:var(--muted);line-height:1.7}
-.shield-section{padding:80px 20px;}
-.shield-section h2{text-align:center;font-size:2.3rem;margin-bottom:10px;}
-.shield-subtitle{text-align:center;color:var(--muted);margin-bottom:40px;}
-.info-tile-title{
-color:var(--neon);
-font-weight:700;
-margin-bottom:12px;
-}
-footer{
-padding:40px 20px;
-text-align:center;
-color:var(--muted);
-}
-.reveal{opacity:0;transform:translateY(50px);transition:1s}
-.reveal.active{opacity:1;transform:none}
-@keyframes gridMove{to{background-position:40px 40px}}
-@keyframes auroraMove{
-0%{transform:translate(-10%,-10%)}
-50%{transform:translate(10%,10%)}
-100%{transform:translate(-10%,-10%)}
-}
-@keyframes auroraRotate{from{rotate:0deg}to{rotate:360deg}}
-@keyframes particlesMove{from{transform:translateY(0) rotate(0)}to{transform:translateY(-250px) rotate(360deg)}}
-@keyframes floatLogo{50%{transform:translateY(-15px)}}
-@keyframes titleGlow{to{background-position:200% center}}
-@keyframes pulse{50%{box-shadow:0 0 25px var(--neon)}}
-
-/* Style dla urządzeń mobilnych i tabletów */
-@media(max-width:768px){
-.hero p{letter-spacing:2px}
-.grid, .shield-grid{
-grid-template-columns: 1fr !important;
-}
-.card, .info-tile{
-padding: 22px;
-}
-}
+.shield-section{padding:80px 20px;max-width:1200px;margin:auto}
+.shield-section h2{text-align:center;font-size:2.3rem;margin-bottom:10px}
+.shield-subtitle{text-align:center;color:var(--muted);margin-bottom:40px}
+.info-tile-title{color:var(--neon);font-weight:700;margin-bottom:12px}
+footer{padding:40px 20px;text-align:center;color:var(--muted)}
+.reveal{opacity:1}
+@media(max-width:768px){.grid,.shield-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="scroll-progress"></div>
 <div class="cyber-bg"></div>
-<div class="particles"></div>
 
 <header>
 <div class="nav-container">
@@ -204,104 +50,96 @@ padding: 22px;
 </header>
 
 <section class="hero">
-<img src="logo.png" alt="Biały Wywiad - Bezpieczeństwo i Informacje" class="hero-img">
+<img src="logo.png" alt="Logo" class="hero-img">
 <h1>Patryk</h1>
-<p>Cybersecurity & OSINT Specjalista</p>
+<p>Cybersecurity • OSINT • Microsoft Security • AI</p>
 </section>
 
 <main class="container">
 <div class="grid">
-<div class="card reveal">
+<div class="card">
 <h3>Cyberbezpieczeństwo</h3>
-<p>Moja uwaga skupia się na analizie cyfrowych zagrożeń oraz edukowaniu innych, jak bezpiecznie poruszać się po sieci. Propaguję najlepsze praktyki ochrony prywatności, zabezpieczania kont oraz danych w świecie nowych technologii.</p>
+<p>Analiza zagrożeń cyfrowych, edukacja użytkowników oraz promocja dobrych praktyk bezpieczeństwa.</p>
 </div>
-
-<div class="card reveal">
+<div class="card">
 <h3>Przeciw Cyberprzemocy</h3>
-<p>Stanowczo sprzeciwiam się wszelkim przejawom hejtu, trollingu oraz nękania rówieśniczego i personalnego w sieci. Pomagam ofiarom nękania w procesie poprawnego zabezpieczania śladów i analizie naruszeń.</p>
+<p>Pomoc w zabezpieczaniu dowodów, analizie incydentów i przeciwdziałaniu nękaniu w sieci.</p>
 </div>
-
-<div class="card reveal">
+<div class="card">
 <h3>Aktywna Moderacja</h3>
-<p>Działam jako doświadczony moderator na różnorodnych portalach oraz platformach społecznościowych. Moim priorytetem jest natychmiastowe neutralizowanie toksyczności, dezinformacji oraz dbanie o porządek i kulturę dyskusji.</p>
+<p>Moderacja społeczności, walka z dezinformacją i budowanie bezpiecznych przestrzeni online.</p>
 </div>
 </div>
 </main>
 
 <section class="shield-section">
 <h2>Cyber-Tarcza Ochronna</h2>
-<p class="shield-subtitle">Zakres realizowanych zadań pomocowych oraz procedury operacyjne wsparcia w sieci.</p>
-
+<p class="shield-subtitle">Zakres realizowanych działań pomocowych.</p>
 <div class="shield-grid">
-<div class="info-tile reveal">
-<div class="info-tile-title">Biały Wywiad (OSINT)</div>
-<div class="info-tile-desc">Pozyskiwanie, weryfikacja i korelacja publicznie dostępnych informacji w sieci (Open Source Intelligence). Wykorzystywane do skutecznej identyfikacji cyberzagrożeń, fałszywych profili i sieciowych oszustw.</div>
+<div class="info-tile"><div class="info-tile-title">Biały Wywiad (OSINT)</div><div class="info-tile-desc">Pozyskiwanie i analiza informacji z otwartych źródeł.</div></div>
+<div class="info-tile"><div class="info-tile-title">Walka z Hejtem</div><div class="info-tile-desc">Wsparcie w dokumentowaniu naruszeń i zgłoszeniach.</div></div>
+<div class="info-tile"><div class="info-tile-title">Moderacja</div><div class="info-tile-desc">Audyty bezpieczeństwa, regulaminy i zarządzanie społecznościami.</div></div>
+</div>
+</section>
+
+<section class="shield-section">
+<h2>Certyfikaty i Szkolenia</h2>
+<p class="shield-subtitle">Microsoft, OSINT, OPSEC oraz sztuczna inteligencja.</p>
+<div class="shield-grid">
+
+<div class="info-tile">
+<div class="info-tile-title">Microsoft Azure</div>
+<div class="info-tile-desc">
+• Automatyzowanie zadań platformy Azure za pomocą programu Azure PowerShell<br>
+• Kontrolowanie i porządkowanie zasobów platformy Azure za pomocą usługi Azure Resource Manager<br>
+• Kontrolowanie usług platformy Azure za pomocą interfejsu wiersza polecenia<br>
+• Ochrona zasobów platformy Azure za pomocą RBAC<br>
+• Dopasowywanie wymagań do typów chmury i modeli usług na platformie Azure
+</div>
 </div>
 
-<div class="info-tile reveal">
-<div class="info-tile-title">Walka z Hejtem</div>
-<div class="info-tile-desc">W przypadku doświadczania prześladowania kluczowa jest zimna krew. Nie należy wchodzić w toksyczną dyskusję. Należy niezwłocznie zabezpieczyć pełne linki URL, unikalne ID użytkowników oraz zrzuty ekranu przed próbą ich usunięcia.</div>
+<div class="info-tile">
+<div class="info-tile-title">Microsoft Security Copilot</div>
+<div class="info-tile-desc">
+• Opis rozwiązania Microsoft Security Copilot<br>
+• Opis podstawowych funkcji narzędzia Microsoft Security Copilot<br>
+• Opis osadzonych środowisk rozwiązania Microsoft Security Copilot<br>
+• Opis agentów Copilot zabezpieczeń firmy Microsoft<br>
+• Eksplorowanie przypadków użycia rozwiązania Microsoft Security Copilot
+</div>
 </div>
 
-<div class="info-tile reveal">
-<div class="info-tile-title">Zgłoszenia / Moderacja</div>
-<div class="info-tile-desc">Profesjonalne wsparcie dla społeczności cyfrowych: przeprowadzanie audytów bezpieczeństwa na serwerach, tworzenie szczelnych regulaminów porządkowych, wdrażanie zaawansowanych botów filtrujących oraz sprawne zarządzanie kryzysowe.</div>
+<div class="info-tile">
+<div class="info-tile-title">AI i Microsoft Fabric</div>
+<div class="info-tile-desc">
+• Wprowadzenie do pojęć związanych ze sztuczną inteligencją<br>
+• Wprowadzenie do koncepcji generacyjnych sztucznej inteligencji<br>
+• Wprowadzenie do kompleksowej analizy przy użyciu usługi Microsoft Fabric
 </div>
+</div>
+
+<div class="info-tile">
+<div class="info-tile-title">OSINT i OPSEC</div>
+<div class="info-tile-desc">
+• Securitum – Podstawy OSINT i OPSEC<br>
+• Webinar „Mit Bezpieczeństwa”
+</div>
+</div>
+
 </div>
 </section>
 
 <footer>
-<p>&copy; 2026 Patryk (Cert&OSINT). Wszystkie prawa zastrzeżone.</p>
+<p>&copy; 2026 Patryk (Cert&OSINT)</p>
+<p>Cybersecurity | OSINT | Microsoft Security | Azure | AI</p>
 </footer>
 
 <script>
-// Paski postępu i animacje ujawniania (Scroll)
 window.addEventListener('scroll',()=>{
 const win=document.documentElement.scrollTop;
 const h=document.documentElement.scrollHeight-document.documentElement.clientHeight;
 document.querySelector('.scroll-progress').style.width=(win/h)*100+'%';
 });
-
-const reveal=document.querySelectorAll('.reveal');
-function show(){
-reveal.forEach(el=>{
-if(el.getBoundingClientRect().top < window.innerHeight-120){
-el.classList.add('active');
-}
-});
-}
-window.addEventListener('scroll',show);
-show();
-
-// --- BLOKADA INSPEKCJI KODU (Systemy Windows, macOS, Linux, Mobile) ---
-
-// 1. Blokada prawego przycisku myszy (Menu kontekstowe)
-document.addEventListener('contextmenu', event => event.preventDefault());
-
-// 2. Blokada skrótów klawiszowych (F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Cmd+Opt+I)
-document.addEventListener('keydown', event => {
-    if (
-        event.key === 'F12' ||
-        (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'i')) ||
-        (event.ctrlKey && event.shiftKey && (event.key === 'J' || event.key === 'j')) ||
-        (event.ctrlKey && (event.key === 'U' || event.key === 'u')) ||
-        (event.metaKey && event.altKey && (event.key === 'I' || event.key === 'i')) // Dla macOS
-    ) {
-        event.preventDefault();
-        return false;
-    }
-});
-
-// 3. Pętla anty-debugowania (Zawiesza DevTools po otwarciu, działa też na symulatorach mobilnych)
-setInterval(function() {
-    const startTime = +new Date();
-    debugger;
-    const endTime = +new Date();
-    if (endTime - startTime > 100) {
-        // Jeśli wykryto otwarcie konsoli, można tu dodać akcję np. czyszczenie strony:
-        document.body.innerHTML = "Wykryto próbę inspekcji kodu. Dostęp zablokowany.";
-    }
-}, 100);
 </script>
 </body>
 </html>
